@@ -1,16 +1,21 @@
 import config as cfg
 from src.dataset import * 
 from src.feature_extraction import *
+from src.data_preparation import *
 
 if __name__ == "__main__":
     
     datasets=['warblrb','ff1010']
 
-    for dataset_name in datasets:
-        dataset = DatasetCreator(dataset_name)
-        dataset.run()
-        feature_extractor = FeatureExtraction(dataset_name)
-        feature_extractor.run()
+    # for dataset_name in datasets:
+    #     dataset = DatasetCreator(dataset_name)
+    #     dataset.run()
+    #     feature_extractor = FeatureExtraction(dataset_name)
+    #     feature_extractor.run()
+        
+    data_preparation = DataPreparation(datasets)
+    data_preparation.run()    
+    
     
         
     

@@ -13,6 +13,7 @@ import cPickle
 import numpy as np
 from scipy import signal
 import librosa
+from tqdm import tqdm
 
 def readwav(path):
     Struct = wavio.read( path )
@@ -40,42 +41,33 @@ class FeatureExtraction:
             os.makedirs(self.feature_path)
         
     def run(self):
-        self.extract_mel(self.wav_path, self.feature_path )   
-        
+        if not os.listdir(self.feature_path):
+            self.extract_mel()
+        else:
+            print(self.feature +  " features are already extracted! ")
 
             
     # extract mel feature
-    # Use preemphasis, the same as matlab
-    def extract_mel(self, wav_fd, fe_fd):
-        names = [ na for na in os.listdir(wav_fd) if na.endswith('.wav') ]
+    def extract_mel(self):
+        print("Extracting " + self.feature + " features")
+        names = [ na for na in os.listdir(self.wav_path) if na.endswith('.wav') ]
         names = sorted(names)
-        cnt = 1
-        for na in names:
-            print(cnt, na)
-            path = wav_fd + '/' + na
-            wav, fs = readwav( path )
+        
+        melW = librosa.filters.mel(cfg.fs, n_fft=cfg.win, n_mels=cfg.n_mels, fmin=0., fmax=22100 )
+        melW /= np.max(melW, axis=-1)[:,None]
+        
+        for f in tqdm(names):
+            file = os.path.join(self.wav_path , f)
+            wav, fs = readwav(file)
             if ( wav.ndim==2 ): 
                 wav = np.mean( wav, axis=-1 )
-            assert fs==44100
+            assert fs==cfg.fs
             ham_win = np.hamming(cfg.win)
-            [f, t, X] = signal.spectral.spectrogram( wav, window=ham_win, nperseg=cfg.win, noverlap=0, detrend=False, return_onesided=True, mode='magnitude' ) 
+            [fq, t, X] = signal.spectral.spectrogram( wav, window=ham_win, nperseg=cfg.win, noverlap=0, detrend=False, return_onesided=True, mode='magnitude' ) 
             X = X.T
-            
-            # define global melW, avoid init melW every time, to speed up. 
-            if globals().get('melW') is None:
-                global melW
-                melW = librosa.filters.mel( fs, n_fft=cfg.win, n_mels=40, fmin=0., fmax=22100 )
-                melW /= np.max(melW, axis=-1)[:,None]
-            
             X = np.dot( X, melW.T )
             X=X/np.max(X)
             
-            # DEBUG. print mel-spectrogram
-            # plt.matshow((X.T), origin='lower', aspect='auto')
-            # plt.show()
-            
-            
-            out_path = fe_fd + '/' + na[0:-4] + '.f'
+            out_path = os.path.join(self.feature_path, f[0:-4]+".f")
             cPickle.dump( X, open(out_path, 'wb'), protocol=cPickle.HIGHEST_PROTOCOL )
-            cnt += 1
         

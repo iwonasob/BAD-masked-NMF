@@ -47,5 +47,6 @@ test_mel_fd = mel_fd + '/test_fe_mel'
 
 # global params
 win = 1024
+n_mels = 40
 fs = 44100.
 n_duration = 440    # 44 frames per second, all together 10 seconds

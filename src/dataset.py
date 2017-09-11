@@ -1,5 +1,5 @@
 '''
-SUMMARY:  downloads and extracts the dataset
+SUMMARY:  downloads and extracts datasets
 AUTHOR:   Iwona Sobieraj
 Created:  2017.09.07
 Modified: -
@@ -11,6 +11,9 @@ import sys
 import requests
 import zipfile
 from clint.textui import progress
+import numpy as np
+np.random.seed(1515)
+import csv
 
 
 class DatasetCreator:
@@ -28,6 +31,7 @@ class DatasetCreator:
         path , zip_name     = os.path.split(self.wav_url)
         self.wav_zip        = os.path.join(cfg.home_path, zip_name)  
         self.csv_path       = os.path.join(self.root_path, cfg.csv_path[self.dataset_name])
+        self.csv_10_path    = os.path.join(self.root_path, "cv10.csv")
         
         if not os.path.isdir(self.root_path):
             os.makedirs(self.root_path)
@@ -36,32 +40,32 @@ class DatasetCreator:
     def run(self):
         self.download()
         self.extract()
+        self.partition()
         
         
     def download(self):
         """ Download the dataset and annotation file
 
         """
-        if not os.path.isfile(self.wav_zip): 
-            print("Downloading the dataset "+ self.dataset_name)
-            r = requests.get(self.csv_url, stream=True) # TODO fix the repetition!
-            with open(self.csv_path, 'wb') as f:
-                total_length = int(r.headers.get('content-length'))
-                for chunk in progress.bar(r.iter_content(chunk_size=8192), expected_size=(total_length/8192) + 1): 
-                    if chunk:
-                        f.write(chunk)
-                        f.flush()
-            f.close()
-            r = requests.get(self.wav_url, stream=True)
-            with open(self.wav_zip, 'wb') as f:
-                total_length = int(r.headers.get('content-length'))
-                for chunk in progress.bar(r.iter_content(chunk_size=8192), expected_size=(total_length/8192) + 1): 
-                    if chunk:
-                        f.write(chunk)
-                        f.flush()
-            f.close()
-        else:
-            print(self.dataset_name + " has been already downloaded!")
+        urls =[(self.csv_url,self.csv_path),(self.wav_url,self.wav_zip )]
+        
+        for u in urls:
+            url=u[0]
+            download_path=u[1]
+            if not os.path.isfile(download_path): 
+                print("Downloading the file "+ u[1])
+                # open the link
+                r = requests.get(url, stream=True) 
+                # save the content to a file
+                with open(u[1], 'wb') as f:
+                    total_length = int(r.headers.get('content-length'))
+                    for chunk in progress.bar(r.iter_content(chunk_size=8192), expected_size=(total_length/8192) + 1): 
+                        if chunk:
+                            f.write(chunk)
+                            f.flush()
+                f.close()
+            else:
+                print(download_path + " is already there!")
             
         
     def extract(self):
@@ -74,4 +78,21 @@ class DatasetCreator:
             zip.extractall(self.root_path)
         else:
             print(self.dataset_name + " has been already extracted!")
+            
+            
+    def partition(self, n=10):
+        """ Create a csv file with partitioning into n subsets
+
+        """
+        with open(self.csv_path, 'rb') as f:
+            reader = csv.reader(f)
+            data_list = list(reader)
+        
+        randints = np.random.randint( low=0, high=n, size=len(data_list))
+        f = open(self.csv_10_path, 'w')
+        f.write('itemid,label,fold\n')
+        for  i, line in enumerate(data_list):
+            f.write(str(line[0]) + ',' + str(line[1])  + ',' + str(randints[i])+"\n")
+        f.close()
+        print("The partition into "+ str(n) + " is saved: "+ self.csv_10_path)
             
