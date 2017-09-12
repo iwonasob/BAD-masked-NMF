@@ -13,7 +13,7 @@ import zipfile
 from clint.textui import progress
 import numpy as np
 np.random.seed(1515)
-import csv
+import pandas as pd
 
 
 class DatasetCreator:
@@ -84,15 +84,8 @@ class DatasetCreator:
         """ Create a csv file with partitioning into n subsets
 
         """
-        with open(self.csv_path, 'rb') as f:
-            reader = csv.reader(f)
-            data_list = list(reader)
-        
-        randints = np.random.randint( low=0, high=n, size=len(data_list))
-        f = open(self.csv_10_path, 'w')
-        f.write('itemid,label,fold\n')
-        for  i, line in enumerate(data_list):
-            f.write(str(line[0]) + ',' + str(line[1])  + ',' + str(randints[i])+"\n")
-        f.close()
+        data_list = pd.read_csv(self.csv_path)
+        data_list['fold'] = np.random.randint( low=0, high=n, size=len(data_list))
+        data_list.to_csv(self.csv_10_path)
         print("The partition into "+ str(n) + " is saved: "+ self.csv_10_path)
             
