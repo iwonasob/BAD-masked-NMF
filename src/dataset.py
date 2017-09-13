@@ -84,8 +84,11 @@ class DatasetCreator:
         """ Create a csv file with partitioning into n subsets
 
         """
-        data_list = pd.read_csv(self.csv_path)
-        data_list['fold'] = np.random.randint( low=0, high=n, size=len(data_list))
-        data_list.to_csv(self.csv_10_path)
-        print("The partition into "+ str(n) + " is saved: "+ self.csv_10_path)
+        if not os.path.isfile(self.csv_10_path): 
+            data_list = pd.read_csv(self.csv_path)
+            data_list['fold'] = np.random.randint( low=0, high=n, size=len(data_list))
+            data_list.to_csv(self.csv_10_path)
+            print("The partition into "+ str(n) + " is saved: "+ self.csv_10_path)
+        else:
+            print("The partition CSV file is already there! "+ self.csv_10_path)
             

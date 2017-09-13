@@ -19,13 +19,20 @@ csv_path    = {'warblrb' : "warblrb10k_public_metadata.csv",
             'ff1010'  : "ff1010bird_metadata.csv"}
                        
 
-# test dataset workspace
-# test_wav_fd = "/vol/vssp/msos/qk/test_bird_wav"
-# test_mel_fd = mel_fd + '/test_fe_mel'
-
 # global params
-feature="mel"
-win = 1024
-n_mels = 40
-fs = 44100.
+feature ="mel"
+win     = 1024
+fs      = 44100.
+n_mels  = 40
+n_sh    = 4
 n_duration = 440    # 44 frames per second, all together 10 seconds
+
+# NMF training parameters
+type        = '0_1' # available types: '01' for masked NMF, '0_1' for class-conditioned NMF, 'unsupervised' for unsupervised NMF
+update_func = "kl"
+iterations  = 200
+rank_0      = 50
+rank_1      = 10
+
+# Classifier paramters
+n_trees = 500
