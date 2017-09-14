@@ -101,7 +101,7 @@ class NMF():
             H = self.normalize_H(H)
         return [V, W, H]
         
-"""
+    """
     Optimize Itakura-Saito divergence
     """ 
     def is_updates(self, V, W, H, lam, alpha, split_size):

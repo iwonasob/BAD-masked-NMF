@@ -52,9 +52,8 @@ class Evaluator:
         print("Predicting with Random Forest")
         y_scores=clf.predict_proba(np.array(test_data_pooled))
         cPickle.dump(y_scores, open(self.results_name, 'wb' ), protocol=cPickle.HIGHEST_PROTOCOL )
-        if y_scores
-        fpr, tpr, thresholds = metrics.roc_curve(y_test, y_scores[:,1])
         
         if len(y_test) > 0:
+            fpr, tpr, thresholds = metrics.roc_curve(y_test, y_scores[:,1])
             roc_auc = metrics.auc(fpr, tpr)
             print roc_auc
