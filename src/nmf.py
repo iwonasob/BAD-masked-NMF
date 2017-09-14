@@ -97,44 +97,11 @@ class NMF():
             W = self.normalize_W(W)
         if self.update_H: 
             R = np.dot(W,H)
-            H *= np.dot(W.T, np.divide(V, R + eps)) / (np.dot(W.T, self.ones) + eps)
+            H *= np.dot(W.T, np.divide(V, R + eps)) / (np.dot(W.T, self.ones) + lam + eps)
             H = self.normalize_H(H)
         return [V, W, H]
         
-
-    def kls_updates(self, V, W, H,lam,alpha,split_size):
-        eps = np.spacing(1)
-        if self.update_W:
-            R = np.dot(W,H)
-            W *= np.dot(np.divide(V, R + eps) , H.T) / (np.dot(self.ones, H.T) + eps)
-            W = self.normalize_W(W)
-        if self.update_H: 
-            R = np.dot(W,H)
-            H *= np.dot(W.T, np.divide(V, R + eps)) / (np.dot(W.T, self.ones) + eps+ lam)
-            H = self.normalize_H(H)
-        return [V, W, H]
-        
-    def klc_updates(self, V, W, H, lam, alpha, split_size):
-        eps = np.spacing(1)
-        [W1, W2] = np.split(W, split_size)
-        [V1, V2] = np.split(V, split_size)
-        if self.update_W:
-            R1 = np.dot(W1,H)
-            W1 *= np.dot(np.divide(V1, R1 + eps) , H.T) / (np.dot(np.ones(V1.shape), H.T) + eps)
-            W1 = self.normalize_W(W1)
-            R2 = np.dot(W2,H)
-            W2 *= np.dot(np.divide(V2, R2 + eps) , H.T) / (np.dot(np.ones(V2.shape), H.T) + eps)
-            W2 = self.normalize_W(W2)
-        if self.update_H: 
-            R1 = np.dot(W1,H)
-            R2 = np.dot(W2,H)
-            H *= ((1-alpha)*np.dot(W1.T, np.divide(V1, R1 + eps)) + alpha*np.dot(W2.T, np.divide(V2, R2 + eps)))/ (1-alpha)*(np.dot(W1.T, np.ones(V1.shape)) + alpha*np.dot(W2.T, np.ones(V2.shape))+ eps+ lam)
-            H = self.normalize_H(H)
-        W= np.vstack((W1,W2))
-        return [V, W, H]
-        
-
-    """
+"""
     Optimize Itakura-Saito divergence
     """ 
     def is_updates(self, V, W, H, lam, alpha, split_size):

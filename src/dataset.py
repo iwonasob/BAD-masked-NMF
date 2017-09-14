@@ -1,9 +1,5 @@
 '''
-SUMMARY:  downloads and extracts datasets
-AUTHOR:   Iwona Sobieraj
-Created:  2017.09.07
-Modified: -
---------------------------------------
+Download, extract and partition the datasets
 '''
 import config as cfg
 import os
@@ -82,6 +78,8 @@ class DatasetCreator:
             
     def partition(self, n=10):
         """ Create a csv file with partitioning into n subsets
+        Args:
+            n:  number of subsets
 
         """
         if not os.path.isfile(self.csv_10_path): 

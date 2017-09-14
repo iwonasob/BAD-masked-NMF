@@ -1,10 +1,7 @@
 '''
-SUMMARY:  downloads and extracts datasets
-AUTHOR:   Iwona Sobieraj
-Created:  2017.09.07
-Modified: -
---------------------------------------
+Train the dictionary and a classfier
 '''
+
 import config as cfg
 import os
 import numpy as np
@@ -18,14 +15,10 @@ np.random.seed(1515)
 eps = np.spacing(1)
 num_cores = multiprocessing.cpu_count()
 
-from IPython.core.debugger import Tracer
-
 class Trainer:
     def __init__(self):
                      
         """ Initialize class
-        Args:
-            dataset_name (string): Name of the dataset to prepare
         """
         self.n_sh           = cfg.n_sh
         self.feature        = cfg.feature
@@ -43,6 +36,13 @@ class Trainer:
             os.makedirs(self.W_path)
         
     def run_nmf(self,tr_positive,tr_negative):
+        '''Extract a dictionary via NMF given a method chosen in config file
+        Args:
+           tr_positive: a numpy array containing all the positive examples 
+           tr_negative: a numpy array containing all the negative examples
+        Output:
+            NONE, the dictionary is saved in a file
+        '''
         print(tr_positive.shape)
         if self.type == '0_1':
             
@@ -88,6 +88,14 @@ class Trainer:
             
             
     def run_rf(self,tr_positive,tr_negative):
+        ''' Extracts activation matrices using a trained dictionary. Tains a classifier on pooled activations.
+        Args:
+           tr_positive: a numpy array containing all the positive examples 
+           tr_negative: a numpy array containing all the negative examples
+        Output:
+            clf:    trained classifier
+            W  :    used dictionary
+        '''
         
         print "Loading dictionary "+ self.W_name
         if self.type == '01' or self.type =='unsupervised':

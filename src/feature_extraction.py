@@ -1,9 +1,5 @@
 '''
-SUMMARY:  extracts the dataset
-AUTHOR:   Iwona Sobieraj
-Created:  2017.09.07
-Modified: -
---------------------------------------
+Extracts appropriate features from the datasets
 '''
 import config as cfg
 import os
@@ -49,6 +45,8 @@ class FeatureExtraction:
             
     # extract mel feature
     def extract_mel(self):
+        """ Extract mel spectrograms
+        """
         print("Extracting " + self.feature + " features")
         names = [ na for na in os.listdir(self.wav_path) if na.endswith('.wav') ]
         names = sorted(names)

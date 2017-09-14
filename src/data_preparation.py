@@ -1,9 +1,5 @@
 '''
-SUMMARY:  downloads and extracts datasets
-AUTHOR:   Iwona Sobieraj
-Created:  2017.09.07
-Modified: -
---------------------------------------
+Prepares the data for training and testing
 '''
 import config as cfg
 import os
@@ -34,6 +30,9 @@ class DataPreparation:
             os.makedirs(self.tmp_path)
             
     def run(self):
+        '''
+        Creates or loads data used for training and testing
+        '''
         dump_file = os.path.join(self.tmp_path, "datadump_"+str(self.tr_fold)+"_"+str(self.test_fold)+".p")
         if not os.path.isfile(dump_file): 
             data_dict = {}
@@ -53,6 +52,8 @@ class DataPreparation:
         
     def combine_datasets(self, fold_n):
         ''' Combine all the datasets in the list
+        Args:
+            fold_n: number of the partition fold
         '''        
         X_all,label_all,itemid_all=[],[],[]
         for dataset in self.datasets:
@@ -65,6 +66,8 @@ class DataPreparation:
         
     def preprocess_data(self, data):
         ''' Normalise and shingle data
+        Args:
+            data: list containing the spectrograms
         '''
         data_norm=[ t/np.max(t) for t in data]
         data_sh=[librosa.feature.stack_memory(t.transpose(), n_steps=self.n_sh) for t in data_norm]
@@ -72,6 +75,11 @@ class DataPreparation:
         
 
     def load_data(self, dataset,fold_n):
+        ''' Load selected data
+        Args:
+            dataset:    name of the dataset 
+            fold_n:     number of the partition fold
+        '''
         print("Loading dataset " + dataset + " fold "+ str(fold_n))
         csv_path=os.path.join(cfg.home_path, dataset, self.csv)
         data = pd.read_csv(csv_path)

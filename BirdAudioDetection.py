@@ -1,3 +1,7 @@
+'''
+Main script to download and prepare the data and run Bird Audio Detection
+'''
+
 import config as cfg
 from src.dataset import * 
 from src.feature_extraction import *
