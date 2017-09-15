@@ -6,7 +6,7 @@ Configuration file containing all the parameters of the system
 mode="dev" # 'dev' for training and testing on 10% of the data, 'eval' to train on the entire dataset
 
 # PATHS
-home_path   = "/vol/vssp/AcousticEventsDetection/BAD"
+home_path   = "/vol/vssp/AcousticEventsDetection/BAD-masked-NMF"
 
 wav_url     = {'warblrb' : "https://archive.org/download/warblrb10k_public/warblrb10k_public_wav.zip",
             'ff1010'  : "https://archive.org/download/ff1010bird/ff1010bird_wav.zip"}

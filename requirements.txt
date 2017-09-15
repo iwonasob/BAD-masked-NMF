@@ -8,3 +8,6 @@ tqdm>=4.14.0
 requests>=2.13.0
 matplotlib>=1.5.3
 seaborn>=0.7.1
+clint>=0.5.1
+wavio>=0.0.3
+
