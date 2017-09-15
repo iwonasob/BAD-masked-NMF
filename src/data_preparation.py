@@ -60,7 +60,6 @@ class DataPreparation:
             X_all.extend(X)
             label_all.extend(label)
             itemid_all.extend(itemid)
-        Tracer()()
         return [X_all, label_all, itemid_all] 
         
     def preprocess_data(self, data):

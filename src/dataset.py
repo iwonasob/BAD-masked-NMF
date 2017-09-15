@@ -26,14 +26,14 @@ class DatasetCreator:
         self.csv_url        = cfg.csv_url[self.dataset_name]
         path , zip_name     = os.path.split(self.wav_url)
         self.wav_zip        = os.path.join(cfg.home_path, zip_name)
-	self.wav_path       = os.path.join(self.root_path, "wav")
+        self.wav_path       = os.path.join(self.root_path, "wav")
         self.csv_path       = os.path.join(self.root_path, cfg.csv_path[self.dataset_name])
         self.csv_10_path    = os.path.join(self.root_path, "cv10.csv")
         
         if not os.path.isdir(self.root_path):
             os.makedirs(self.root_path)
-	if not os.path.isdir(self.wav_path):
-	    os.makedirs(self.wav_path)
+        if not os.path.isdir(self.wav_path):
+            os.makedirs(self.wav_path)
             
             
     def run(self):
