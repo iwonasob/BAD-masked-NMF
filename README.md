@@ -26,6 +26,6 @@ To reproduce the results from the paper do the following:
 1. Modify the working path home_path in config.py
 2. Run the system. It will download the datasets, preapre the training data, train and test the system.
 
-`python BirdDetectionChallenge.py`
+`python BirdAudioDetection.py`
     
     
