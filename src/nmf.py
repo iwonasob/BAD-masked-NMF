@@ -79,7 +79,7 @@ class NMF():
                 if err <= self.threshold:
                      return [W, H, err]
             if self.verbose == True:
-                print err
+                print(err)
          return [W, H, err]
 
     """
@@ -142,7 +142,7 @@ def process_parallel(rank, V, W0 = None, lam=0, H0 = None,verbose=False, iterati
         [V, W, H] = update(V, W, H, lam)
         err = compute_error(V, W, H)
         if verbose == True:
-            print err
+            print(err)
     return [W, H, err]
         
    

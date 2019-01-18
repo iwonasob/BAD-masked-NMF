@@ -5,7 +5,7 @@ import config as cfg
 import os
 import sys
 import wavio
-import cPickle
+import pickle
 import numpy as np
 from scipy import signal
 import librosa
@@ -68,5 +68,5 @@ class FeatureExtraction:
             
             name=os.path.splitext(f)[0]
             out_path = os.path.join(self.feature_path, name+".f")
-            cPickle.dump( X, open(out_path, 'wb'), protocol=cPickle.HIGHEST_PROTOCOL )
+            pickle.dump( X, open(out_path, 'wb'))
         

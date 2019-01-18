@@ -4,7 +4,7 @@ Prepares the data for training and testing
 import config as cfg
 import os
 import pandas as pd
-import cPickle
+import pickle
 import numpy as np
 import librosa
 
@@ -37,10 +37,10 @@ class DataPreparation:
             data_dict = {}
             [data_dict['X_train'], data_dict['y_train'], data_dict['itemid_train']]=self.combine_datasets(self.tr_fold)   
             [data_dict['X_test'], data_dict['y_test'], data_dict['itemid_test']]=self.combine_datasets(self.test_fold)
-            cPickle.dump( data_dict, open( dump_file, 'wb'), protocol=cPickle.HIGHEST_PROTOCOL )
+            pickle.dump( data_dict, open( dump_file, 'wb'))
             print("Training and test data saved to: " + dump_file)
         else:
-            data_dict = cPickle.load(open( dump_file, 'rb'))
+            data_dict = pickle.load(open( dump_file, 'rb'))
             print("Loaded the training and test data from: " + dump_file)
         X_train, y_train, itemid_train, X_test,  y_test, itemid_test = data_dict['X_train'], data_dict['y_train'], data_dict['itemid_train'], data_dict['X_test'], data_dict['y_test'], data_dict['itemid_test']
         X_train_1 = self.preprocess_data(np.take(X_train,np.where(np.array(y_train)==1)[0]))
@@ -85,5 +85,5 @@ class DataPreparation:
         label=data_part['hasbird'].values
         itemid=data_part['itemid'].values
         paths=[os.path.join(cfg.home_path, dataset, cfg.feature, str(i)+".f") for i in itemid]
-        X = [cPickle.load(open(path, 'rb')) for path in paths]
+        X = [pickle.load(open(path, 'rb')) for path in paths]
         return [X, label, itemid]

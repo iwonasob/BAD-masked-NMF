@@ -5,11 +5,11 @@ Train the dictionary and a classfier
 import config as cfg
 import os
 import numpy as np
-import cPickle
+import pickle
 from sklearn import  ensemble
 from joblib import Parallel, delayed
 import multiprocessing
-from nmf import NMF, process_parallel
+from src.nmf import NMF, process_parallel
 
 np.random.seed(1515)
 eps = np.spacing(1)
@@ -65,7 +65,7 @@ class Trainer:
             [W,H,error]=nmf_model.process(V) 
             
             print("Saved dictionary to "+self.W_name)
-            cPickle.dump( W, open( self.W_name, 'wb' ), protocol=cPickle.HIGHEST_PROTOCOL )
+            pickle.dump( W, open( self.W_name, 'wb' ))
             
         elif self.type == '01':
             # # -------- Train with masking ----------
@@ -80,7 +80,7 @@ class Trainer:
             [W,H,error]=nmf_model.process(V,H0=H0) 
             
             print("Saved dictionary to "+self.W_name)
-            cPickle.dump( W, open( self.W_name, 'wb' ), protocol=cPickle.HIGHEST_PROTOCOL )
+            pickle.dump( W, open( self.W_name, 'wb' ))
         else:
             raise ValueError('Dictionary type not recognized')
             
@@ -97,7 +97,7 @@ class Trainer:
             W  :    used dictionary
         '''
         
-        print "Loading dictionary "+ self.W_name
+        print("Loading dictionary "+ self.W_name)
         if self.type == '01' or self.type =='unsupervised':
             W = cPickle.load(open(self.W_name, 'rb' ))
         elif self.type == '0_1':
